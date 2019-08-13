@@ -105,7 +105,7 @@ export default class GameResultModal extends React.Component {
   }
 
   render() {
-    const { players } = this.state;
+    const { players, onComplete } = this.state;
 
     return (
       <Modal animationType="slide" transparent={false} visible={true}>
@@ -119,6 +119,11 @@ export default class GameResultModal extends React.Component {
                   onSetWinner={() => this.setWinner(i)}
                   onChange={(n, v) => this.handlePlayerDataChange(i, n, v)} player={p} />)
             ))}
+            <Button onPress={() => onComplete({
+              players: players
+            })}>
+              <Text>저장</Text>
+            </Button>
           </Content>
         </Container>
       </Modal>

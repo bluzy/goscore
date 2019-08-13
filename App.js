@@ -4,10 +4,12 @@ import Home from './Home';
 import GameScreen from './screens/GameScreen';
 
 import { initTables } from './utils/db';
+import InitScreen from './screens/InitScreen';
 
 const MainNavigator = createStackNavigator({
   Home: Home,
-  Game: GameScreen
+  InitGame: InitScreen,
+  CurrentGame: GameScreen,
 }, {
     initialRouteName: 'Home'
   });

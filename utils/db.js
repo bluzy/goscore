@@ -7,10 +7,10 @@ export const initTables = () => {
     tx.executeSql(
       `create table if not exists
         game (
-          id int primary key auto_increment,
+          id integer primary key autoincrement,
           title varchar(255),
-          rule_id int,
-          members int,
+          rule_id integer,
+          members integer,
           start_time datetime,
           end_time datetime
         );`
@@ -18,10 +18,19 @@ export const initTables = () => {
 
     tx.executeSql(
       `create table if not exists
+        game_player (
+          id integer primary key autoincrement,
+          game_id integer,
+          name varchar(255)
+        );`
+    );
+
+    tx.executeSql(
+      `create table if not exists
         game_rule (
-          id int primary key auto_increment,
+          id integer primary key autoincrement,
           name varchar(255),
-          money int,
+          money integer,
           start_time datetime,
           end_time datetime
         );`
@@ -30,8 +39,8 @@ export const initTables = () => {
     tx.executeSql(
       `create table if not exists
         game_item (
-          id int primary key auto_increment,
-          game_id int,
+          id integer primary key autoincrement,
+          game_id integer,
           nagari bit,
           start_time datetime,
           end_time datetime
@@ -41,22 +50,52 @@ export const initTables = () => {
     tx.executeSql(
       `create table if not exists
         player_score (
-          game_item_id int,
-          player int,
+          game_item_id integer,
+          player_id integer,
           win bit,
-          score int,
-          go_cnt int,
+          score integer,
+          go_cnt integer,
           shake bit,
-          fbbuk int,
+          fbbuk integer,
           pbak bit,
           gwangbak bit,
           gobak bit
         );`
     );
 
+  }, (err) => {
+    alert(err);
+  }, () => {
+
   })
 }
 
-export const createGame = () => {
+export const createGame = (title, players, onCreated, onFail) => {
+  const gameObj = {
+    title: title,
+    players: players.map(p => ({
+      name: p.name
+    }))
+  };
 
+  db.transaction(tx => {
+    tx.executeSql("insert into game (title, members, start_time) values (?, ?, date('now'))",
+      [title, players.length], (_, { insertId: gameId }) => {
+        gameObj.id = gameId;
+
+        players.map((p, i) => {
+          tx.executeSql("insert into game_player (game_id, name) values (?, ?)", [gameId, p.name],
+            (_, { insertId }) => {
+              gameObj.players[i].id = insertId
+            })
+        })
+
+      })
+  }, (err) => {
+    if (onFail) {
+      onFail(err);
+    }
+  }, (succ) => {
+    onCreated(gameObj);
+  })
 }

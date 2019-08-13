@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { NavigationEvents } from 'react-navigation';
 
 export default class HomeScreen extends React.Component {
 
@@ -17,7 +16,7 @@ export default class HomeScreen extends React.Component {
           <Text>Image</Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <Button title="Go" onPress={() => navigate('Game')} />
+          <Button title="Go" onPress={() => navigate('InitGame')} />
         </View>
       </View>
     );
