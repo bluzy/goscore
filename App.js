@@ -3,6 +3,8 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Home from './Home';
 import GameScreen from './screens/GameScreen';
 
+import { initTables } from './utils/db';
+
 const MainNavigator = createStackNavigator({
   Home: Home,
   Game: GameScreen
@@ -11,5 +13,7 @@ const MainNavigator = createStackNavigator({
   });
 
 const App = createAppContainer(MainNavigator);
+
+initTables();
 
 export default App;
