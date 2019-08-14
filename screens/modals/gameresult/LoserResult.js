@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, CheckBox, Button, Card, CardItem, Left, Right, Icon, ListItem, Body, Picker, Text, Grid, Row, Col } from 'native-base';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default class LoserResult extends React.Component {
 
@@ -15,10 +15,17 @@ export default class LoserResult extends React.Component {
 
     return (
       <ListItem>
-        <Left>
-          <Grid>
+        <Grid>
+          <Col size={2} style={{ justifyContent: 'center', alignItems: 'center', marginRight: 5 }}>
+            <Button small danger onPress={onSetWinner}>
+              <Text>
+                {"패"}
+              </Text>
+            </Button>
+          </Col>
+          <Col size={3}>
             <Row>
-              <Text onPress={onSetWinner}>{player.name}</Text>
+              <Text>{player.name}</Text>
             </Row>
             <Row>
               {player.calculatedScore != null && (
@@ -27,32 +34,31 @@ export default class LoserResult extends React.Component {
                 </Text>
               )}
             </Row>
-          </Grid>
-        </Left>
-        <Body>
-          <Grid>
+          </Col>
+          <Col size={6}>
             <Row>
               <Col>
-                <Button style={styles.button} success transparent={!player.pbak}
+                <Button style={styles.button} warning={!player.pbak} success={player.pbak} transparent={!player.pbak}
                   onPress={() => onChange('pbak', !player.pbak)}>
                   <Text>피박</Text>
                 </Button>
               </Col>
               <Col>
-                <Button style={styles.button} success transparent={!player.gbak}
+                <Button style={styles.button} warning={!player.gbak} success={player.gbak} transparent={!player.gbak}
                   onPress={() => onChange('gbak', !player.gbak)}>
                   <Text>광박</Text>
                 </Button>
               </Col>
               <Col>
-                <Button style={styles.button} success transparent={!player.gobak}
+                <Button style={styles.button} warning={!player.gobak} success={player.gobak} transparent={!player.gobak}
                   onPress={() => onChange('gobak', !player.gobak)}>
-                  <Text>고박</Text>
+                  <Text>독박</Text>
                 </Button>
               </Col>
             </Row>
-          </Grid>
-        </Body>
+          </Col>
+        </Grid>
+
       </ListItem>
     )
   }

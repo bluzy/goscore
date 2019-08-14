@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Container, Header, Content, Body, Button, Text, Grid, Row, Col } from 'native-base';
 
 export default class HomeScreen extends React.Component {
 
@@ -11,14 +12,21 @@ export default class HomeScreen extends React.Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Text>Image</Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <Button title="Go" onPress={() => navigate('InitGame')} />
-        </View>
-      </View>
+      <Container>
+        <Header>
+          <Body>
+            <Text>
+              {"GoScore"}
+            </Text>
+          </Body>
+        </Header>
+        <Content>
+          <Text style={{ height: 500 }}>GoScore</Text>
+          <Button full onPress={() => navigate('InitGame')}>
+            <Text>시작</Text>
+          </Button>
+        </Content>
+      </Container>
     );
   }
 }
@@ -39,7 +47,5 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flex: 2,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   }
 });

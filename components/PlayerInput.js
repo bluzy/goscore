@@ -8,7 +8,7 @@ export default class PlayerInput extends React.Component {
     const { name, onNameChange } = this.props;
 
     return (
-      <Item style={{ width: 80 }} floatingLabel >
+      <Item floatingLabel >
         <Label>이름</Label>
         <Input onChangeText={t => onNameChange(t)} value={name} />
       </Item>

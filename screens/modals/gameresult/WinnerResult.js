@@ -66,8 +66,15 @@ export default class WinnerResult extends React.Component {
 
     return (
       <ListItem>
-        <Left>
-          <Grid>
+        <Grid>
+          <Col size={2} style={{ justifyContent: 'center', alignItems: 'center', marginRight: 5 }}>
+            <Button small>
+              <Text>
+                {"승"}
+              </Text>
+            </Button>
+          </Col>
+          <Col size={3}>
             <Row>
               <Text>
                 {player.name}
@@ -80,13 +87,10 @@ export default class WinnerResult extends React.Component {
                 </Text>
               )}
             </Row>
-          </Grid>
-        </Left>
-        <Body>
-          <Grid>
+          </Col>
+          <Col size={6}>
             <Row>
-              <Item style={{ width: 80 }} floatingLabel >
-                <Label>점수</Label>
+              <Item style={{ width: 80 }} >
                 <Input type="number" placeholder="점수" value={player.score}
                   onChangeText={(v) => {
                     onChange('score', v)
@@ -103,13 +107,13 @@ export default class WinnerResult extends React.Component {
               </Item>
             </Row>
             <Row>
-              <Button success transparent={!player.shake}
+              <Button warning={!player.shake} success={player.shake} transparent={!player.shake}
                 onPress={() => onChange('shake', !player.shake)}>
                 <Text>흔들기</Text>
               </Button>
             </Row>
-          </Grid>
-        </Body>
+          </Col>
+        </Grid>
       </ListItem >
     )
 

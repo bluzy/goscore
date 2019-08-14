@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, TextInput, Modal } from 'react-native';
-import { Container, Content, Button, CheckBox, ListItem } from 'native-base';
+import { Modal } from 'react-native';
+import { Container, Header, Content, Button, CheckBox, ListItem, Text } from 'native-base';
 import WinnerResult from './WinnerResult';
 import LoserResult from './LoserResult';
 import { GoCounts } from '../../../utils/constants';
+import { calculateScore } from '../../../utils/score';
 
 export default class GameResultModal extends React.Component {
 
@@ -57,50 +58,10 @@ export default class GameResultModal extends React.Component {
   }
 
   calculate = () => {
-    const { players } = this.state;
-
-    const winnerIndex = players.findIndex(p => p.winner);
-    if (winnerIndex < 0) {
-      return;
-    }
-
-    const winner = players[winnerIndex];
-
-    const go = parseInt(winner.go);
-    let addScore = go;
-    let multiply = go >= 3 ? Math.pow(2, go - 2) : 1;
-
-    if (winner.shake) {
-      multiply *= 2;
-    }
-
-    if (this.state.nagari) {
-      multiply *= 2;
-    }
-
-    const winnerScore = (parseInt(winner.score) + addScore) * multiply;
-
-    const _players = players.map((p, i) => {
-      if (i === winnerIndex) {
-        p.calculatedScore = winnerScore;
-      } else {
-        let m = 1;
-        if (p.pbak) {
-          m *= 2;
-        }
-        if (p.gbak) {
-          m *= 2;
-        }
-        if (p.gobak) {
-          m *= 2;
-        }
-        p.calculatedScore = -(winnerScore * m);
-      }
-      return p;
-    });
+    const { players, nagari } = this.state;
 
     this.setState({
-      players: _players
+      players: calculateScore(players, nagari)
     })
   }
 
@@ -111,6 +72,9 @@ export default class GameResultModal extends React.Component {
     return (
       <Modal animationType="slide" transparent={false} visible={true}>
         <Container>
+          <Header>
+            <Text>결과 입력</Text>
+          </Header>
           <Content>
             {players.map((p, i) => (
               p.winner ? (<WinnerResult key={`p_${i}`}

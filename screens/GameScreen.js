@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, } from 'react-native';
 import GameResultModal from './modals/gameresult/GameResultModal';
-import { Container, List, ListItem, Grid, Row, Col, Spinner, Button, Card, CardItem, Body, Header, Content, Footer } from 'native-base';
+import { StyleSheet } from 'react-native';
+import { Container, List, ListItem, Grid, Row, Col, Spinner, Button, Card, CardItem, Body, Header, Content, Footer, Text, Right } from 'native-base';
 
 import { getGame, saveHistory } from '../utils/db';
 import PlayerStateModal from './modals/PlayerStateModal';
@@ -26,7 +26,12 @@ export default class GameScreen extends React.Component {
 
     getGame(gameId, (game) => {
       this.setState({
-        gameInfo: game
+        gameInfo: game,
+        playerTotal: game.players.map(p => ({
+          player: p,
+          score: 0,
+          toScore: []
+        }))
       })
     })
   }
@@ -91,35 +96,47 @@ export default class GameScreen extends React.Component {
       <Container>
         <Header>
           <Text>{gameInfo.title}</Text>
-          <Button onPress={() => this.setState({ stateOpen: true })}>
-            <Text>전체보기</Text>
-          </Button>
         </Header>
         <Content>
           <List>
-            {games.map((g, i) => (
-              <Grid>
-                <Row>
+            {games.length > 0 ? games.map((g, i) => (
+              <ListItem key={`games_${i}`}>
+                <Grid>
                   {g.players.map((gp, j) => (
-                    <Card style={{ width: 100 }} onPress={() => this.setState({ stateOpen: j })}>
-                      <CardItem header>
-                        <Text>{gp.name}</Text>
-                      </CardItem>
-                      <CardItem>
-                        <Body>
-                          <Text>{`${gp.calculatedScore}점`}</Text>
-                        </Body>
-                      </CardItem>
-                    </Card>
+                    <Col size={1}>
+                      <Card>
+                        <CardItem header>
+                          <Text>{gp.name}</Text>
+                        </CardItem>
+                        <CardItem>
+                          <Body>
+                            <Text style={gp.winner ? style.winnerText : style.loserText}>{`${gp.calculatedScore}점`}</Text>
+                          </Body>
+                        </CardItem>
+                      </Card>
+                    </Col>
                   ))}
-                </Row>
-              </Grid>
-            ))}
+                </Grid>
+              </ListItem>
+            )) : (
+                <ListItem>
+                  <Text>게임 기록이 없습니다.</Text>
+                </ListItem>
+              )}
           </List>
 
-          <Button onPress={() => this.setState({ modalOpen: true })}>
-            <Text>입력</Text>
-          </Button>
+          <Grid>
+            <Col size={75}>
+              <Button style={{ margin: 5 }} full onPress={() => this.setState({ modalOpen: true })}>
+                <Text>입력</Text>
+              </Button>
+            </Col>
+            <Col size={25}>
+              <Button style={{ margin: 5 }} full onPress={() => this.setState({ stateOpen: true })}>
+                <Text>정산</Text>
+              </Button>
+            </Col>
+          </Grid>
         </Content>
         {
           this.state.modalOpen &&
@@ -139,9 +156,22 @@ export default class GameScreen extends React.Component {
         }
         {
           this.state.stateOpen &&
-          <PlayerStateModal toScores={this.state.playerTotal} onClose={() => { this.setState({ stateOpen: false }) }} />
+          <PlayerStateModal scores={this.state.playerTotal}
+            onClose={() => { this.setState({ stateOpen: false }) }}
+            onExit={() => {
+              alert("byebye");
+            }} />
         }
       </Container>
     )
   }
 }
+
+const style = StyleSheet.create({
+  winnerText: {
+    color: '#1E90FF'
+  },
+  loserText: {
+    color: '#DC143C'
+  }
+})

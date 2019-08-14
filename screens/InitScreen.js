@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Content, Button, List, ListItem, Grid, Row, Col, Text } from 'native-base';
+import { StyleSheet } from 'react-native';
+import { Container, Header, Content, Left, Body, Button, List, ListItem, Grid, Row, Col, Text, Card, CardItem } from 'native-base';
 import PlayerInput from '../components/PlayerInput';
 import { createGame } from '../utils/db';
 
@@ -67,37 +68,46 @@ export default class InitScreen extends React.Component {
 
     return (
       <Container>
+        <Header>
+          <Text>게임 생성</Text>
+        </Header>
         <Content>
-          <Grid>
-            <Row>
+          <Card>
+            <CardItem header>
+              <Text>모드</Text>
+            </CardItem>
+            <CardItem style={{ flexDirection: 'row' }}>
               <Button transparent={this.state.mode !== 3} onPress={() => this.onModeChanged(3)}>
                 <Text>3인</Text>
               </Button>
               <Button transparent={this.state.mode !== 2} onPress={() => this.onModeChanged(2)}>
                 <Text>2인</Text>
               </Button>
-            </Row>
-
-            <Row>
-              <List>
-                {this.state.players.map((p, i) => (
-                  <ListItem key={`player_${i}`}>
-                    <PlayerInput name={p.name} onNameChange={(name) => {
-                      this.onPlayerChanged(i, 'name', name)
-                    }} />
-                  </ListItem>
-                ))}
-              </List>
-            </Row>
-            <Row>
-              <Button onPress={() => this.startGame()}>
-                <Text>시작</Text>
-              </Button>
-            </Row>
-          </Grid>
+            </CardItem>
+          </Card>
+          {this.state.players.map((p, i) => (
+            <Card key={`player_${i}`}>
+              <CardItem header>
+                <Text>{`플레이어${i + 1}`}</Text>
+              </CardItem>
+              <CardItem>
+                <PlayerInput name={p.name} onNameChange={(name) => {
+                  this.onPlayerChanged(i, 'name', name)
+                }} />
+              </CardItem>
+            </Card>
+          ))}
+          <Button full onPress={() => this.startGame()}>
+            <Text>시작</Text>
+          </Button>
         </Content>
       </Container>
     )
   }
-
 }
+
+const styles = StyleSheet.create({
+  row: {
+    height: 50
+  }
+});
