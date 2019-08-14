@@ -17,7 +17,7 @@ export default class GameScreen extends React.Component {
     modalOpen: false,
     games: [],
     playerTotal: [],
-    stateOpen: null,
+    stateOpen: false,
   }
 
   componentWillMount() {
@@ -90,25 +90,10 @@ export default class GameScreen extends React.Component {
     return (
       <Container>
         <Header>
-          <Grid>
-            <Row>
-              <Text>{gameInfo.title}</Text>
-            </Row>
-            <Row>
-              {playerTotal.map((t, j) => (
-                <Card style={{ width: 100 }} onPress={() => this.setState({ stateOpen: j })}>
-                  <CardItem header>
-                    <Text>{t.player.name}</Text>
-                  </CardItem>
-                  <CardItem>
-                    <Body>
-                      <Text>{`${t.score}점`}</Text>
-                    </Body>
-                  </CardItem>
-                </Card>
-              ))}
-            </Row>
-          </Grid>
+          <Text>{gameInfo.title}</Text>
+          <Button onPress={() => this.setState({ stateOpen: true })}>
+            <Text>전체보기</Text>
+          </Button>
         </Header>
         <Content>
           <List>
@@ -140,7 +125,6 @@ export default class GameScreen extends React.Component {
           this.state.modalOpen &&
           <GameResultModal players={gameInfo.players} onComplete={(game) => {
             saveHistory(game, (g) => {
-              console.log(g);
               const games = this.state.games.concat([g]);
 
               this.setState({
@@ -154,8 +138,8 @@ export default class GameScreen extends React.Component {
           }} />
         }
         {
-          this.state.stateOpen != null &&
-          <PlayerStateModal score={this.state.playerTotal[this.state.stateOpen]} onClose={() => { this.setState({ stateOpen: null }) }} />
+          this.state.stateOpen &&
+          <PlayerStateModal toScores={this.state.playerTotal} onClose={() => { this.setState({ stateOpen: false }) }} />
         }
       </Container>
     )
