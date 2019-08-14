@@ -4,6 +4,7 @@ import GameResultModal from './modals/gameresult/GameResultModal';
 import { Container, List, ListItem, Grid, Row, Col, Spinner, Button, Card, CardItem, Body, Header, Content, Footer } from 'native-base';
 
 import { getGame, saveHistory } from '../utils/db';
+import PlayerStateModal from './modals/PlayerStateModal';
 
 export default class GameScreen extends React.Component {
 
@@ -15,7 +16,8 @@ export default class GameScreen extends React.Component {
     gameInfo: null,
     modalOpen: false,
     games: [],
-    playerTotal: []
+    playerTotal: [],
+    stateOpen: null,
   }
 
   componentWillMount() {
@@ -60,7 +62,12 @@ export default class GameScreen extends React.Component {
       totalScores[i] = {
         player: gameInfo.players[i],
         score: score,
-        toScore: toScore
+        toScore: toScore.map((t, i) => {
+          return {
+            player: gameInfo.players[i],
+            score: t,
+          }
+        })
       }
     }
 
@@ -88,8 +95,8 @@ export default class GameScreen extends React.Component {
               <Text>{gameInfo.title}</Text>
             </Row>
             <Row>
-              {playerTotal.map(t => (
-                <Card style={{ width: 100 }}>
+              {playerTotal.map((t, j) => (
+                <Card style={{ width: 100 }} onPress={() => this.setState({ stateOpen: j })}>
                   <CardItem header>
                     <Text>{t.player.name}</Text>
                   </CardItem>
@@ -108,8 +115,8 @@ export default class GameScreen extends React.Component {
             {games.map((g, i) => (
               <Grid>
                 <Row>
-                  {g.players.map(gp => (
-                    <Card style={{ width: 100 }}>
+                  {g.players.map((gp, j) => (
+                    <Card style={{ width: 100 }} onPress={() => this.setState({ stateOpen: j })}>
                       <CardItem header>
                         <Text>{gp.name}</Text>
                       </CardItem>
@@ -145,6 +152,10 @@ export default class GameScreen extends React.Component {
             })
 
           }} />
+        }
+        {
+          this.state.stateOpen != null &&
+          <PlayerStateModal score={this.state.playerTotal[this.state.stateOpen]} onClose={() => { this.setState({ stateOpen: null }) }} />
         }
       </Container>
     )
